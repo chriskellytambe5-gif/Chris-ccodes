@@ -3,7 +3,7 @@
 <!-- ====================== -->
 <p align="center">
   <!-- REPLACE THE LINK BELOW WITH YOUR OWN LOGO LINK AFTER UPLOADING -->
-  <img src="YOUR_LOGO_LINK_HERE" width="170" alt="Engineer JaGa Logo"/>
+  <img src="my logo" width="170" alt="Engineer JaGa Logo"/>
 </p>
 
 <!-- ====================== -->
