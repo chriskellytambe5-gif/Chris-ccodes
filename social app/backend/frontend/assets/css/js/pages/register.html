@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>page</title>
+</head>
+<body>
+    <style>
+        button:hover{
+            background-color: white;
+            transition: 1s;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        
+        html{
+           background-color: rgba(13, 49, 148, 0.932);
+        }
+        
+        button{
+            background-color: rgba(14, 131, 20, 0.74);
+            box-sizing: 50px;
+            border-radius: 10px;
+            transition-duration: 3ms;
+            cursor: pointer;
+            border: 0px;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        div{
+            background-color: rgba(6, 55, 128, 0.637);
+            margin-top: 500px;
+            padding-right: 120px;
+            padding-left: 150px;
+            padding-bottom: 70px;
+            margin-bottom: 150px;
+            max-height: 500px;
+            max-width: 250px;
+            padding-top: 50px;
+            background-image: image(image);
+            width: 80px;
+            height: 250px;
+            margin: 500px;
+            padding: 100px;
+            border: 0px;
+            border-radius: 20px;
+            font-family: 'Times New Roman', Times, serif;
+
+            
+        }
+        h1{
+            color: white;
+            transition: 3ms;
+            padding-left: -2%;
+            padding-top: 0px;
+            align-items:center;
+            padding-right: 50px;
+            font-family: 'Times New Roman', Times, serif;
+            
+
+        }
+        button h1{
+            background-color: aquamarine;
+            box-sizing: content-box;
+            border-radius: 7px;
+            box-sizing: 20;
+        }
+        div p{
+            color: palevioletred;
+            font-family: 'Times New Roman', Times, serif;
+            font-weight: bold;
+            text-align: center;
+            font-size: medium;
+            
+        }
+        import mongoose from "mongoose";
+import dotenv from "dotenv";
+import bcrypt from "bcrypt";
+import User from "./models/User.js";
+dotenv.config();
+
+const MONGO_URI = process.env.MONGO_URI;
+const ADMIN_KEY = process.env.ADMIN_KEY;
+
+if (!MONGO_URI || !ADMIN_KEY) {
+  console.error("Set MONGO_URI and ADMIN_KEY in .env");
+  process.exit(1);
+}
+
+const args = process.argv.slice(2);
+const [name, email, password, key] = args;
+if (!name || !email || !password || !key) {
+  console.error("Usage: node createAdmin.js <name> <email> <password> <ADMIN_KEY>");
+  process.exit(1);
+}
+if (key !== ADMIN_KEY) {
+  console.error("ADMIN_KEY mismatch");
+  process.exit(1);
+}
+
+(async () => {
+  try {
+    await mongoose.connect(MONGO_URI);
+    const existing = await User.findOne({ email });
+    if (existing) {
+      console.error("User exists. Exiting.");
+      process.exit(1);
+    }
+    const passwordHash = await bcrypt.hash(password, 10);
+    const user = new User({ name, email, passwordHash, role: "admin" });
+    await user.save();
+    console.log("Admin user created:", user.email);
+    process.exit(0);
+  } catch (err) {
+    console.error(err);
+    process.exit(1);
+  }
+})();
+
+    </style>
+    <div>
+ <h1>LOGIN</h1>
+ <button> Enter Name </button> 
+ <h1></h1>
+ <button>Enter Email</button>
+ <h1></h1>
+ <button>Create password</button>
+ <p>dont have an account </p> 
+    </div>
+</body>
+</html>

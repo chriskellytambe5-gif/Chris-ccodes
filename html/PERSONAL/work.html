@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="stlyle.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>my first website assignment </title>
+    <link rel="stylesheet" href="stlyle.css">
+</head>
+<body>
+    <style>
+         margin; 
+    padding; 0;
+    box-sizing: border-box;
+}
+    body{
+        content: '';
+        position: fixed;
+        top: 0%
+        left: 0;
+        width: 100%;
+        height: 100%;
+        font-family:ARREYS,OJONG, sans-serif;
+        background-color: rgb(0, 0, 4); /* dark background */
+        z-index: -1;/* behind other content */
+        color:  #333;
+
+nav ul {
+    list-style: none;none;
+    display: flex;
+    justify-content: center;
+
+}  
+button{
+    box-sizing: border-box;
+    size: 20px;
+    border: 0;
+    border-radius: 20px;
+    padding-left: 100px;
+    padding-right: 100px;
+    margin: 100px;
+}     
+nav ul li  {
+margin: 0 20px;
+}
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: ;4px;
+}
+nav ul li a:hover {
+    color: #fcc00f;
+    background-color: #0f27fc;
+    padding-left: 100px;
+}
+footer {
+    text-align: center;
+    padding: 40px;
+}
+    background-color: #004080;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    padding: 15px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+contact h2 {
+    background-color: rgba(0, 0, 0, 0.685);
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 o 10px rgb(red, green, rgba(6, 6, 235, 0.856));
+    text-align: center;
+}
+#contact h2 {
+    text-align: center;
+    color: black;
+margin:-botton; 15px;
+}
+.form-group {
+    display: block;
+    margin-bottom: 8px;
+    font-weight:bold;
+}
+input, textarea {
+    background-color: rgba(0, 0, 0, 0.726);
+    color: white;
+    border: none;
+    padding: 12px 20px
+    border-radius : 10px ;
+     cursor: pointer;
+     width: 100%;
+     font-size: 16px;
+     
+
+}
+
+button:hover {
+    background-color: #0d21d6;
+    transition: 2s;
+    border-radius: 17px;
+    cursor: pointer;
+
+}
+|* responsive design for mobile screens*|
+@media (max-width: 768px) {
+    nav ul {
+        flex-direction: column;
+        align-items:center
+    }
+    nav ul li {
+        margin: 20px 0;
+    }
+    |*ajust main content for smaller screens *|
+    main {
+        padding ;20px;
+        text-align: center;
+    }
+    |* ajust contact form for smaller screens *|
+    #contact  {
+        width: 90%;
+        padding: 20px;
+
+    }
+    |* ajust footer for smaller screens *|
+    footer {
+        font-size: 18px;
+        padding: 20px 0;
+    }
+    label{
+        box-sizing: border-box;
+        padding-left: 50px;
+        background-color: dark whitesmoke;
+        margin-left: 100px;
+        margin: 100px;
+    }
+}
+    </style>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#">home</a></li>                   
+                <li><a href="#">About</a></li>
+                <li><a href="#">services</a></li>
+                </li><a href="#">contact</a></li>
+            </ul>
+         <nav>
+    <header>
+    <main>          
+    <h1>welcome to my first website.</h1> 
+    <p>this is my first website created with html and vscode.</p>
+    <main>
+<section id="contact">
+    <h2>contact me </h2>
+    <form action="#" method="post">
+        <div class="form-group">
+            <label for="name">full name:</label>
+            <input type="text" id="name" name="name" placeholder="enter your full name " required>
+        </div>
+        <div class="form-group">
+            <label for="email">email address:</label>
+            <input type="email" id="email" name="email" placeholder="enter your email address" required>
+        </div>
+        <div class="form-group">
+            <label for="message">message:</label>
+            <textarea id="message" name="message" placeholder="enter your message" required></textarea>
+        </div>
+        <button type="submit">send message</button> 
+    </form>
+</section>
+<main>
+
+        <footer>
+    <h2>About me </h2>
+    <p>I am Tambe chris kelly ojong a student of yaounde international business school yaounde.</p>
+    I dream to become  a software engineer by the grace of God.</body>
+
+    <h2>contact</h2>
+    <form action="#">
+        <label for="name">name</label>
+        <input type="text" id="name" name="name"><br><br>
+        <label for="email">email:</label>
+        <input type="email" id="email" name="email"><br><br>
+
+        <input type="submit" value="send">
+    </form>
+</html>

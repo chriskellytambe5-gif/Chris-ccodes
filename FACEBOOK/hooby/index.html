@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multi-Section Landing Page</title>
+<style>
+/* ---------------- Global ---------------- */
+* { box-sizing: border-box; margin:0; padding:0; transition:0.3s; }
+body { font-family:'Segoe UI', Arial,sans-serif; background:#f2f2f2; color:#333; scroll-behavior:smooth; }
+a { text-decoration:none; color:inherit; }
+
+/* ---------------- Navbar ---------------- */
+nav {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:20px 40px; background:#1b1f3a; color:white; position:fixed; top:0; width:100%; z-index:10;
+}
+nav .logo { font-size:1.5rem; font-weight:bold; }
+nav ul { list-style:none; display:flex; gap:20px; }
+nav ul li a { color:white; font-weight:500; }
+nav ul li a.active, nav ul li a:hover { border-bottom:2px solid #4a6cf7; }
+.theme-toggle { margin-left:20px; }
+.theme-toggle label { cursor:pointer; font-size:1.4rem; }
+.theme-toggle input { display:none; }
+
+/* ---------------- Sections ---------------- */
+section { padding:100px 20px; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.hero { background:linear-gradient(to bottom right,#1b1f3a,#3b4b87); color:white; text-align:center; border-bottom-left-radius:50px; border-bottom-right-radius:50px; }
+.hero h1 { font-size:3rem; margin-bottom:15px; }
+.hero p { font-size:1.2rem; opacity:0.9; }
+
+.cards { display:flex; flex-wrap:wrap; gap:30px; justify-content:center; margin-top:40px; }
+.card { width:280px; background:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 4px 10px rgba(0,0,0,0.15); transition:transform 0.3s,box-shadow 0.3s; }
+.card:hover { transform:translateY(-6px); box-shadow:0 6px 14px rgba(0,0,0,0.25); }
+.card img { width:100%; height:170px; object-fit:cover; }
+.card .content { padding:20px; text-align:center; }
+.card .title { font-size:20px; font-weight:bold; margin-bottom:8px; color:#333; }
+.card .subtitle { font-size:14px; color:#666; margin-bottom:16px; }
+.card .btn { display:inline-block; text-decoration:none; background:#0078ff; color:white; padding:10px 18px; border-radius:6px; font-size:14px; transition:0.3s; }
+.card .btn:hover { background:#005fcc; }
+
+.about, .contact { max-width:700px; text-align:center; }
+.contact form { display:flex; flex-direction:column; gap:15px; background:white; padding:25px; border-radius:12px; box-shadow:0 3px 20px rgba(0,0,0,0.1); }
+.contact input, .contact textarea { padding:12px; border-radius:6px; border:1px solid #ccc; font-size:1rem; }
+.contact button { padding:12px; border:none; border-radius:6px; background:#1b1f3a; color:white; font-size:1.2rem; cursor:pointer; }
+.contact button:hover { background:#3b4b87; }
+
+/* ---------------- Footer ---------------- */
+footer { text-align:center; padding:20px; background:#1b1f3a; color:white; font-size:0.9rem; }
+
+/* ---------------- Dark Mode ---------------- */
+body.dark { background:#121214; color:#e4e6eb; }
+body.dark nav { background:#0f1117; }
+body.dark .hero { background:linear-gradient(to bottom right,#0f1117,#1b1f3a); }
+body.dark .card { background:#1e1e2a; }
+body.dark .card .title, body.dark .card .subtitle { color:#e4e6eb; }
+body.dark .card .btn { background:#4a6cf7; }
+body.dark footer { background:#0f1117; color:#e4e6eb; }
+body.dark .contact form { background:#1b1f3a; }
+body.dark .contact input, body.dark .contact textarea { background:#10121a; border:1px solid #444; color:white; }
+
+/* ---------------- Responsive ---------------- */
+@media(max-width:768px){ .cards{flex-direction:column;align-items:center;} }
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+  <div class="logo">My Landing Page</div>
+  <ul>
+    <li><a href="#home" class="active">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="theme-toggle">
+    <input type="checkbox" id="darkSwitch" onclick="toggleDarkMode()">
+    <label for="darkSwitch">🌙</label>
+  </div>
+</nav>
+
+<!-- Home Section -->
+<section id="home" class="hero">
+  <h1>Welcome to My Website</h1>
+  <p>Discover amazing content and interactive cards below</p>
+</section>
+
+<!-- About Section -->
+<section id="about" class="about">
+  <h2>About Me</h2>
+  <p>I am passionate about technology, photography, and design. This site showcases interactive CODING IMAGES and a modern responsive layout .</p>
+</section>
+
+<!-- Gallery Section -->
+<section id="gallery" class="cards">
+  <div class="card">
+    <img src="coding.jpg" alt="">
+    <div class="content">
+      <div class="title">Nature Splash</div>
+      <div class="subtitle">Beautiful landscape scenery</div>
+      <a href="#" class="btn">Explore</a>
+    </div>
+  </div>
+  <div class="card">
+    <img src="coding 2.jpg" alt="GODDDDDDDDD ABEGGGGGGGGGG">
+    <div class="content">
+      <div class="title">City Lights</div>
+      <div class="subtitle">Nightlife urban view</div>
+      <a href="#" class="btn">View More</a>
+    </div>
+  </div>
+  <div class="card">
+    <img src="coding3.jpg" alt="GOODDDDDDDDDDD">
+    <div class="content">
+      <div class="title">Tech Design</div>
+      <div class="subtitle">Futuristic digital interface</div>
+      <a href="#" class="btn">Learn</a>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="contact">
+  <h2>Contact Me</h2>
+  <form id="contactForm">
+    <input type="text" id="name" placeholder="Your Name" required>
+    <input type="email" id="email" placeholder="Email Address" required>
+    <textarea id="message" rows="5" placeholder="Your Message" required></textarea>
+    <button type="submit">Send Message</button>
+  </form>
+  <p id="formStatus"></p>
+</section>
+
+<!-- Footer -->
+<footer>&copy; 2025 My Landing Page FUCK YOU MENNNN . All Rights Reserved.</footer>
+
+<!-- JavaScript -->
+<script>
+// Smooth scroll nav highlight
+const navLinks = document.querySelectorAll('nav ul li a');
+navLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    navLinks.forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+  });
+});
+
+// Dark Mode
+function toggleDarkMode(){
+  const body=document.body;
+  const isDark=body.classList.toggle('dark');
+  localStorage.setItem('theme', isDark?'dark':'light');
+}
+window.addEventListener('DOMContentLoaded',()=>{
+  if(localStorage.getItem('theme')==='dark'){
+    document.body.classList.add('dark');
+    document.getElementById('darkSwitch').checked=true;
+  }
+});
+
+// Contact Form
+document.getElementById('contactForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  const name=document.getElementById('name').value;
+  const email=document.getElementById('email').value;
+  const message=document.getElementById('message').value;
+  const status=document.getElementById('formStatus');
+  if(name && email && message){
+    status.style.color='green';
+    status.textContent='Message sent successfully!';
+    this.reset();
+  } else{
+    status.style.color='red';
+    status.textContent='Please fill all fields.';
+  }
+});
+</script>
+</body>
+</html>

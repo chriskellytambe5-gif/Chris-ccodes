@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Profile — Social App</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="header">
+        <div class="brand"><h1>Profile</h1></div>
+        <div class="nav">
+          <button onclick="go('/chat.html')">Chat</button>
+          <button onclick="logout()">Logout</button>
+        </div>
+      </div>
+
+      <div id="profileArea">
+        <div class="form-row"><img id="avatarPreview" src="" alt="avatar" style="width:120px;height:120px;border-radius:12px;object-fit:cover" /></div>
+        <div class="form-row"><input id="name" class="input" placeholder="Name"/></div>
+        <div class="form-row"><textarea id="bio" class="input" placeholder="Bio"></textarea></div>
+        <div class="form-row"><input id="avatar" type="file" /></div>
+        <div class="form-row"><button class="btn" onclick="saveProfile()">Save</button></div>
+      </div>
+
+    </div>
+  </div>
+
+<script>
+const api = "/api";
+const token = localStorage.getItem("token");
+if(!token) location.href = "/";
+
+async function load(){
+  const res = await fetch(${api}/users/me, { headers: { Authorization: "Bearer "+token }});
+  if(!res.ok) return alert("Auth error"), location.href="/";
+  const user = await res.json();
+  document.getElementById("name").value = user.name;
+  document.getElementById("bio").value = user.bio || "";
+  document.getElementById("avatarPreview").src = user.avatarUrl || "/default-avatar.png";
+}
+load();
+
+async function saveProfile(){
+  const fd = new FormData();
+  fd.append("name", document.getElementById("name").value);
+  fd.append("bio", document.getElementById("bio").value);
+  const file = document.getElementById("avatar").files[0];
+  if(file) fd.append("avatar", file);
+
+  const res = await fetch(${api}/users/me, {
+    method:"PUT",
+    headers: { Authorization: "Bearer "+token },
+    body: fd
+  });
+  const data = await res.json();
+  if(!res.ok) return alert(data.message || "Error");
+  alert("Saved");
+  location.reload();
+}
+
+function logout(){ localStorage.clear(); location.href="/"; }
+function go(p){ location.href = p; }
+</script>
+</body>
+</html>

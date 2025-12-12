@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Class Chat & Dashboard (Firebase)</title>
+  <style>
+    /* ---- Compact styles: layout, navbar, forms, chat, dashboard ---- */
+    :root { --accent:#2962FF; --bg:#f5f8ff; --card:#fff; --muted:#6b7280; }
+    body { margin:0; font-family:Inter,system-ui,Arial; background:var(--bg); color:#111; }
+    header { background:linear-gradient(90deg,var(--accent),#0041b3); color:white; padding:18px 24px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; }
+    header .brand { font-weight:700; font-size:1.05rem; }
+    header nav a { color:white; margin-left:18px; text-decoration:none; font-weight:600; opacity:0.95; }
+    main { max-width:1200px; margin:28px auto; padding:0 18px; display:grid; grid-template-columns: 1fr 380px; gap:22px; align-items:start; }
+    /* left column (chat + hero) */
+    .panel { background:var(--card); border-radius:12px; box-shadow:0 6px 30px rgba(10,20,50,0.08); padding:18px; }
+    .hero { display:flex; gap:18px; align-items:center; padding:22px; }
+    .hero img { width:160px; height:160px; border-radius:12px; object-fit:cover; border:4px solid white; box-shadow:0 10px 30px rgba(0,0,0,0.12); }
+    .hero h1 { margin:0 0 6px 0; font-size:1.4rem; }
+    /* chat */
+    .chat-area { display:flex; flex-direction:column; height:520px; }
+    .messages { flex:1; overflow:auto; padding:14px; border-radius:8px; background:linear-gradient(180deg,#f8fbff,#ffffff); }
+    .msg { margin-bottom:12px; display:flex; gap:10px; align-items:flex-start; }
+    .msg .avatar { width:44px; height:44px; border-radius:8px; overflow:hidden; flex:0 0 44px; }
+    .msg .bubble { background:#eef4ff; padding:10px 12px; border-radius:10px; max-width:75%; }
+    .msg .meta { font-size:12px; color:var(--muted); margin-bottom:6px; }
+    .chat-controls { margin-top:10px; display:flex; gap:10px; }
+    .chat-controls input[type="text"] { flex:1; padding:10px 12px; border-radius:8px; border:1px solid #dbe7ff; }
+    .chat-controls button { padding:10px 14px; background:var(--accent); color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer; }
+    /* right column (sidebar) */
+    .sidebar { display:flex; flex-direction:column; gap:16px; }
+    .userbox { display:flex; gap:12px; align-items:center; }
+    .userbox img { width:64px; height:64px; border-radius:10px; object-fit:cover; }
+    .small-list { display:flex; flex-direction:column; gap:6px; }
+    .small-list .item { padding:8px 10px; border-radius:8px; background:#fbfdff; display:flex; align-items:center; gap:10px; }
+    .btn-ghost { background:#f3f7ff; border:1px solid #e6efff; padding:8px 10px; border-radius:8px; cursor:pointer; }
+    /* login / signup area */
+    .auth { display:flex; gap:12px; align-items:center; }
+    .auth input { padding:8px 10px; border-radius:8px; border:1px solid #dbe7ff; }
+    .auth button { padding:8px 12px; border-radius:8px; background:var(--accent); color:white; border:none; cursor:pointer; }
+    /* students list */
+    .students-list { display:grid; gap:8px; }
+    .student { display:flex; gap:10px; align-items:center; padding:8px; border-radius:8px; background:#fbfdff; }
+    /* admin small UI */
+    .admin { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+    .muted { color:var(--muted); font-size:13px; }
+    /* responsive small screens */
+    @media(max-width:980px){ main{ grid-template-columns:1fr; } .hero img{ width:120px;height:120px; } .chat-area{ height:420px; } }
+  </style>
+  <!-- Firebase (compat) SDKs: use these quick scripts; you'll paste your config below -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="brand">Class Portal</div>
+  <nav>
+    <a href="#chat">Chat</a>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#students">Students</a>
+    <a href="#logout" id="logoutLink" style="display:none;">Sign out</a>
+  </nav>
+</header>
+
+<main>
+  <!-- LEFT: Hero + Chat -->
+  <div>
+    <div class="panel hero">
+      <!-- hero image: larger + styled -->
+      <img id="heroPhoto" src="IMG_E3083.JPG" alt="MY photo">
+      <div>
+        <h1 id="heroName">Welcome — please sign in</h1>
+        <div class="muted">Class chat, profiles, and simple dashboard for classmates YIBS.</div>
+        <div style="margin-top:10px">
+          <small class="muted">Signed in as: <span id="signedInAs">guest</span></small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat panel -->
+    <div class="panel" id="chat" aria-live="polite">
+      <h3>Class Chat Room</h3>
+      <div class="chat-area">
+        <div class="messages panel" id="messagesBox"></div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
+          <div class="muted">Status: <span id="presence">offline</span></div>
+          <div class="muted">Online: <span id="onlineCount">0</span></div>
+        </div>
+
+        <div class="chat-controls" style="margin-top:12px">
+          <input id="chatInput" type="text" placeholder="Type message..." />
+          <button id="sendBtn">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Sidebar (auth, upload photo, students, admin) -->
+  <aside class="sidebar">
+    <!-- Auth / Signup -->
+    <div class="panel">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <strong>Account</strong>
+        <small class="muted">for classmates only</small>
+      </div>
+
+      <div style="margin-top:12px;" id="authArea">
+        <div class="auth">
+          <input id="emailIn" placeholder="email@example.com" />
+          <input id="passIn" placeholder="password" type="password" />
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px;">
+          <button id="btnSignup" class="btn-ghost">Sign up</button>
+          <button id="btnLogin" class="btn-ghost">Log in</button>
+        </div>
+
+        <div style="margin-top:12px;">
+          <input id="displayName" placeholder="Display name (optional)" />
+          <input id="avatarFile" type="file" accept="image/*" />
+          <button id="btnSaveProfile" class="btn-ghost" style="margin-top:8px;">Save profile</button>
+        </div>
+
+        <div style="margin-top:10px;">
+          <small class="muted">If you are admin add classmates to allowed list here:</small>
+          <div class="admin" style="margin-top:8px;">
+            <input id="allowEmail" placeholder="student@example.com" />
+            <button id="btnAllow" class="btn-ghost">Allow</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;">
+        <small class="muted">Admin actions</small>
+        <div style="display:flex;gap:8px;margin-top:8px;">
+          <button id="btnClearMsgs" class="btn-ghost">Clear messages</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Students list -->
+    <div class="panel">
+      <strong>Classmates</strong>
+      <div class="students-list" id="studentsList" style="margin-top:10px;">
+        <!-- dynamic -->
+      </div>
+    </div>
+
+    <!-- Simple dashboard stats -->
+    <div class="panel">
+      <strong>Dashboard</strong>
+      <div style="margin-top:10px">
+        <div class="small-list">
+          <div class="item">Total students: <span id="statStudents">0</span></div>
+          <div class="item">Total messages: <span id="statMessages">0</span></div>
+        </div>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<!-- minimal footer -->
+<footer style="text-align:center;padding:14px;color:#666;background:transparent;">© 2025 — Class Portal (demo)</footer>
+
+<script>
+  /***************************************************************************
+   *  FIREBASE:  Replace the firebaseConfig object below with your project's
+   *  config (from Firebase console). Then enable Email/Password auth,
+   *  Realtime Database and Storage as instructed earlier.
+   ***************************************************************************/
+
+  // ---------- PASTE YOUR FIREBASE CONFIG HERE ----------
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_AUTH_DOMAIN",
+    databaseURL: "YOUR_DATABASE_URL",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_STORAGE_BUCKET",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+  // -----------------------------------------------------
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.database();
+  const storage = firebase.storage();
+
+  // References
+  const messagesRef = db.ref('messages');         // chat messages
+  const usersRef = db.ref('users');               // user profiles
+  const allowedRef = db.ref('allowed');           // allowed UIDs (whitelist)
+  const presenceRef = db.ref('presence');         // who is online
+
+  // UI elements
+  const emailIn = document.getElementById('emailIn');
+  const passIn = document.getElementById('passIn');
+  const btnSignup = document.getElementById('btnSignup');
+  const btnLogin = document.getElementById('btnLogin');
+  const btnSaveProfile = document.getElementById('btnSaveProfile');
+  const avatarFile = document.getElementById('avatarFile');
+  const displayNameInput = document.getElementById('displayName');
+  const signoutLink = document.getElementById('logoutLink');
+
+  const msgBox = document.getElementById('messagesBox');
+  const chatInput = document.getElementById('chatInput');
+  const sendBtn = document.getElementById('sendBtn');
+
+  const studentsList = document.getElementById('studentsList');
+  const statStudents = document.getElementById('statStudents');
+  const statMessages = document.getElementById('statMessages');
+  const presenceEl = document.getElementById('presence');
+  const onlineCountEl = document.getElementById('onlineCount');
+
+  const allowEmail = document.getElementById('allowEmail');
+  const btnAllow = document.getElementById('btnAllow');
+  const btnClearMsgs = document.getElementById('btnClearMsgs');
+
+  const heroName = document.getElementById('heroName');
+  const signedInAs = document.getElementById('signedInAs');
+  const heroPhoto = document.getElementById('heroPhoto');
+
+  /**********************
+   * Authentication flows
+   **********************/
+  btnSignup.onclick = async () => {
+    const email = emailIn.value.trim();
+    const pass = passIn.value;
+    const displayName = displayNameInput.value.trim();
+    if (!email || !pass) return alert('Provide email & password');
+    try {
+      const cred = await auth.createUserWithEmailAndPassword(email, pass);
+      await cred.user.updateProfile({ displayName: displayName || cred.user.email.split('@')[0] });
+      // create user profile in DB
+      usersRef.child(cred.user.uid).set({
+        email: cred.user.email,
+        displayName: cred.user.displayName || '',
+        avatar: '',
+        createdAt: firebase.database.ServerValue.TIMESTAMP
+      });
+      alert('Account created. Ask admin to allow you in the class (or if you are admin use "Allow").');
+      emailIn.value = ''; passIn.value = '';
+    } catch (err) { alert(err.message); }
+  };
+
+  btnLogin.onclick = async () => {
+    const email = emailIn.value.trim();
+    const pass = passIn.value;
+    if (!email || !pass) return alert('Provide email & password');
+    try {
+      const cred = await auth.signInWithEmailAndPassword(email, pass);
+      emailIn.value = ''; passIn.value = '';
+    } catch (err) { alert(err.message); }
+  };
+
+  signoutLink.onclick = async (e) => {
+    e.preventDefault();
+    await auth.signOut();
+  };
+
+  // Save profile (upload avatar)
+  btnSaveProfile.onclick = async () => {
+    const user = auth.currentUser;
+    if (!user) return alert('Sign in first');
+    const displayName = displayNameInput.value.trim();
+    if (displayName) await user.updateProfile({ displayName });
+    if (avatarFile.files[0]) {
+      const file = avatarFile.files[0];
+      const storageRef = storage.ref('avatars/' + user.uid + '/' + file.name);
+      const snap = await storageRef.put(file);
+      const url = await snap.ref.getDownloadURL();
+      await usersRef.child(user.uid).update({ avatar: url, displayName: displayName || user.displayName || '' });
+      heroPhoto.src = url;
+    } else {
+      // just update displayName
+      await usersRef.child(user.uid).update({ displayName: displayName || user.displayName || '' });
+    }
+    alert('Profile saved');
+  };
+
+  /**********************
+   * Presence & Whitelist
+   **********************/
+  // When user logs in, write presence and remove on disconnect
+  auth.onAuthStateChanged(async (u) => {
+    if (u) {
+      signedInAs.textContent = u.email;
+      signoutLink.style.display = 'inline-block';
+      // update hero name
+      const profile = (await usersRef.child(u.uid).once('value')).val() || {};
+      heroName.textContent = 'Welcome, ' + (profile.displayName || u.email.split('@')[0]);
+      heroPhoto.src = profile.avatar || heroPhoto.src;
+
+      // check if allowed
+      const allowed = (await allowedRef.child(u.uid).once('value')).val();
+      if (!allowed) {
+        // not allowed — show message but still signed in; admin must add user to allowed list
+        alert('Your account is not yet allowed to use the class chat. Ask admin to add you.');
+      }
+
+      // presence
+      const myPresenceRef = presenceRef.child(u.uid);
+      myPresenceRef.set({ online: true, lastSeen: firebase.database.ServerValue.TIMESTAMP, email: u.email });
+      myPresenceRef.onDisconnect().set({ online:false, lastSeen: firebase.database.ServerValue.TIMESTAMP, email: u.email });
+    } else {
+      signedInAs.textContent = 'guest';
+      signoutLink.style.display = 'none';
+      heroName.textContent = 'Welcome — please sign in';
+      heroPhoto.src = heroPhoto.src; // keep default
+    }
+  });
+
+  // online count
+  presenceRef.on('value', snap => {
+    const vals = snap.val() || {};
+    const online = Object.values(vals).filter(v=>v && v.online).length;
+    onlineCountEl.textContent = online;
+    presenceEl.textContent = online>0 ? 'online' : 'no one online';
+  });
+
+  /**********************
+   * Chat: send & receive
+   **********************/
+  // only send if user authenticated and allowed
+  sendBtn.onclick = async () => {
+    const user = auth.currentUser;
+    const text = chatInput.value.trim();
+    if (!text) return;
+    if (!user) return alert('Please log in to send messages');
+    const allowed = (await allowedRef.child(user.uid).once('value')).val();
+    if (!allowed) return alert('You are not allowed to send messages yet.');
+
+    const profile = (await usersRef.child(user.uid).once('value')).val() || {};
+    const payload = {
+      uid: user.uid,
+      name: profile.displayName || user.email.split('@')[0],
+      avatar: profile.avatar || '',
+      text,
+      ts: firebase.database.ServerValue.TIMESTAMP
+    };
+    await messagesRef.push(payload);
+    chatInput.value = '';
+  };
+
+  // listen for messages and render
+  messagesRef.limitToLast(200).on('child_added', snap => {
+    const m = snap.val();
+    appendMessage(m, snap.key);
+    updateMessageCount();
+  });
+
+  messagesRef.on('child_removed', snap => {
+    // simple: refresh messages (or remove element)
+    document.getElementById('msg-' + snap.key)?.remove();
+    updateMessageCount();
+  });
+
+  function appendMessage(m, key){
+    // create element
+    const el = document.createElement('div');
+    el.className = 'msg';
+    el.id = 'msg-' + key;
+    el.innerHTML = `
+      <div class="avatar"><img src="${m.avatar || 'https://picsum.photos/seed/'+(m.uid||'x')+'/80/80'}" style="width:100%;height:100%;object-fit:cover;border-radius:6px"></div>
+      <div>
+        <div class="meta"><strong>${escapeHtml(m.name)}</strong> · <span class="muted">${new Date(m.ts || Date.now()).toLocaleString()}</span></div>
+        <div class="bubble">${escapeHtml(m.text)}</div>
+      </div>
+    `;
+    msgBox.appendChild(el);
+    msgBox.scrollTop = msgBox.scrollHeight;
+  }
+
+  function updateMessageCount(){
+    messagesRef.once('value', s => {
+      const c = s.numChildren();
+      statMessages.textContent = c;
+    });
+  }
+
+  /**********************
+   * Students list & dashboard
+   **********************/
+  // monitor users list
+  usersRef.on('value', snap => {
+    const v = snap.val() || {};
+    studentsList.innerHTML = '';
+    Object.keys(v).forEach(uid => {
+      const user = v[uid];
+      const div = document.createElement('div');
+      div.className = 'student';
+      div.innerHTML = `<img src="${user.avatar || 'https://picsum.photos/seed/'+uid+'/80/80'}" width="42" height="42" style="border-radius:8px;object-fit:cover"><div><div style="font-weight:700">${escapeHtml(user.displayName || user.email.split('@')[0])}</div><div class="muted" style="font-size:12px">${escapeHtml(user.email)}</div></div>`;
+      studentsList.appendChild(div);
+    });
+    statStudents.textContent = Object.keys(v).length;
+  });
+
+  /**********************
+   * Admin: allow & clear
+   **********************/
+  btnAllow.onclick = async () => {
+    const email = allowEmail.value.trim();
+    if (!email) return alert('enter email');
+    // find user by email in usersRef
+    const snap = await usersRef.orderByChild('email').equalTo(email).once('value');
+    if (snap.exists()) {
+      const data = snap.val();
+      const uid = Object.keys(data)[0];
+      await allowedRef.child(uid).set(true);
+      alert(email + ' allowed (uid: ' + uid + ')');
+    } else {
+      alert('user not found. The student must sign up first.');
+    }
+  };
+
+  btnClearMsgs.onclick = async () => {
+    if (!confirm('Clear all messages?')) return;
+    // only allow if current user is admin (we check a small client-side ADMIN_UIDS list or admin can check via DB)
+    const user = auth.currentUser;
+    if (!user) return alert('sign-in as admin');
+    // quick admin check: allowedRef.child(user.uid) and also check admin flag in usersRef
+    const isAdmin = (await usersRef.child(user.uid).child('isAdmin').once('value')).val();
+    if (!isAdmin) return alert('you are not admin');
+    await messagesRef.remove();
+    alert('messages cleared');
+  };
+
+  /**********************
+   * Helpers
+   **********************/
+  function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g,c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+
+  /**********************
+   * On load: quick stats
+   **********************/
+  // message count initial
+  updateMessageCount();
+
+  /**********************
+   * NOTES (admin should run once)
+   * - In Firebase console create "allowed" entries for each classmate's uid OR
+   *   use the admin UI above to add them after they sign up.
+   * - Optionally set users/{uid}/isAdmin = true for admin accounts.
+   **********************/
+</script>
+</body>
+</html>

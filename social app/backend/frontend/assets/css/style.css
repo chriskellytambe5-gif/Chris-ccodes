@@ -1,0 +1,20 @@
+*{box-sizing:border-box}
+body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;margin:0;background:linear-gradient(180deg,#f3f6ff,#ffffff);color:#111}
+.container{width:1100px;max-width:95%;margin:28px auto}
+.card{background:#fff;border-radius:12px;padding:18px;box-shadow:0 8px 28px rgba(16,24,40,0.06)}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.btn{background:#111827;color:#fff;padding:8px 12px;border-radius:8px;border:none;cursor:pointer}
+.input{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #e6e9ef}
+.navbar{background:#fff;padding:12px 20px;box-shadow:0 4px 12px rgba(0,0,0,0.03);display:flex;justify-content:space-between;align-items:center}
+.nav-links{display:flex;gap:8px;align-items:center}
+.user-avatar{width:36px;height:36px;border-radius:50%;object-fit:cover}
+.user-list{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.side{width:320px}
+.chat-wrap{display:flex;gap:16px}
+.chat-box{flex:1;display:flex;flex-direction:column;height:560px}
+.messages{flex:1;padding:12px;overflow-y:auto;border-radius:8px;background:linear-gradient(180deg,#fbfdff,#ffffff)}
+.message{padding:10px 12px;margin-bottom:10px;border-radius:12px;max-width:70%}
+.message.me{background:#dafaf1;margin-left:auto;text-align:right}
+.message.other{background:#f4f6fb;margin-right:auto;text-align:left}
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{text-align:left;padding:10px;border-bottom:1px solid #f3f4f6}

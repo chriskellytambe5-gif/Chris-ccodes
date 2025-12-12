@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Premium Interactive Landing Page</title>
+<style>
+  input:hover{transition: 1s;color: #005fcc;background-color: chartreuse;font-family: 'Times New Roman', Times, serif;}
+/* ---------------- Global ---------------- */
+* { box-sizing:border-box; margin:0; padding:0; transition:0.3s; }
+body { font-family:'Segoe UI', Arial, sans-serif; background:#f2f2f2; color:#333; scroll-behavior:smooth; overflow-x:hidden; }
+a { text-decoration:none; color:inherit; }
+
+/* ---------------- Navbar ---------------- */
+nav { display:flex; justify-content:space-between; align-items:center; padding:20px 40px; background:#1b1f3a; color:white; position:fixed; top:0; width:100%; z-index:10; transition:background 0.3s; }
+nav.scrolled { background:#161a30; }
+nav .logo { font-size:1.5rem; font-weight:bold; }
+nav ul { list-style:none; display:flex; gap:20px; }
+nav ul li a { color:white; font-weight:500; }
+nav ul li a.active, nav ul li a:hover { border-bottom:2px solid #4a6cf7; }
+.theme-toggle { margin-left:20px; cursor:pointer; }
+.theme-toggle label { font-size:1.4rem; }
+
+/* ---------------- Hero Section ---------------- */
+.hero { position:relative; height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; color:white; overflow:hidden; }
+.hero::before { content:""; position:absolute; top:0; left:0; width:100%; height:100%; background:url('https://source.unsplash.com/1600x900/?technology') center/cover no-repeat; background-attachment:fixed; opacity:0.25; z-index:0; }
+.hero h1 { font-size:3rem; margin-bottom:15px; z-index:1; position:relative; }
+.hero .typing { color:#4a6cf7; font-weight:bold; z-index:1; position:relative; }
+.hero-content{ display: flex;flex-direction: column;align-items: center;gap: 20px;z-index: 1;position: relative;}
+.hero-photo {width: 150px;height: 150px;border-radius: 50px;object-fit: cover;border: solid;
+box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);transition: transform 0.3s;}  card:hover{background-color: #005fcc; transition: 1s;text-shadow: darkmagenta;font-family: 'Times New Roman', Times, serif;}
+.hero-photo:hover{transform: scale(1.1);} .hero h1:hover{transition: 1s; color: #005fcc; background-color: seagreen; font-family: Arial, Helvetica, sans-serif;}
+/* ---------------- Sections ---------------- */
+section { padding:100px 20px; min-height:80vh; display:flex; flex-direction:column; align-items:center; justify-content:center; opacity:0; transform:translateY(50px); transition: all 1s ease-out; position:relative; }
+section.visible { opacity:1; transform:translateY(0); }
+
+/* ---------------- Cards & Hobbies ---------------- */
+.cards, .hobbies { display:flex; flex-wrap:wrap; gap:30px; justify-content:center; margin-top:40px; }
+.card, .hobby-card { width:280px; background:#ffffff; border-radius:12px; overflow:hidden; text-align:center; box-shadow:0 4px 15px rgba(0,0,0,0.15); transition:transform 0.5s, box-shadow 0.5s; cursor:pointer; opacity:0; transform:translateY(30px); }
+.card.visible, .hobby-card.visible { opacity:1; transform:translateY(0); transition-delay:0.2s; }
+.card:hover, .hobby-card:hover { transform:translateY(-10px) rotateX(3deg) rotateY(3deg) scale(1.05); box-shadow:0 12px 30px rgba(0,0,0,0.35); }
+.card img, .hobby-card img { width:100%; height:170px; object-fit:cover; transition: transform 0.4s ease; }
+.card img:hover, .hobby-card img:hover { transform:scale(1.1); transition: 2s; color: violet;background-color: #005fcc; }
+
+/* ---------------- About & Students ---------------- */
+.about, .contact { max-width:700px; text-align:center; }
+.students { margin-top:40px; width:100%; max-width:500px; background:#fff; border-radius:12px; padding:20px; box-shadow:0 3px 20px rgba(0,0,0,0.1); }
+.students ul { list-style: disc; padding-left:20px; text-align:left; }
+.students ul li { padding:5px 0; font-weight:500; transition:0.3s; opacity:0; transform:translateX(-20px); }
+.students ul li.visible { opacity:1; transform:translateX(0); transition-delay:0.2s; }
+.students ul li:hover { color:#0078ff; transform:translateX(5px); }
+
+/* ---------------- Hobbies Filter ---------------- */
+.filter-btns { margin-bottom:20px; display:flex; gap:15px; flex-wrap:wrap; justify-content:center; }
+.filter-btns button { padding:8px 15px; border:none; border-radius:6px; background:#0078ff; color:white; cursor:pointer; transition:0.3s; }
+.filter-btns button:hover, .filter-btns button.active { background:#005fcc; }
+
+/* ---------------- Progress Bars ---------------- */
+.progress-container { width:80%; max-width:600px; margin-top:30px; }
+.progress { background:#ddd; border-radius:20px; overflow:hidden; margin:15px 0; }
+.progress-bar { height:20px; width:0%; background:#0078ff; border-radius:20px; text-align:right; color:white; padding-right:5px; font-size:12px; line-height:20px; transition:width 1.5s ease-in-out; }
+
+/* ---------------- Contact Form ---------------- */
+.contact form { display:flex; flex-direction:column; gap:15px; background:white; padding:25px; border-radius:12px; box-shadow:0 3px 25px rgba(0,0,0,0.1); }
+.contact input, .contact textarea { padding:12px; border-radius:6px; border:1px solid #ccc; font-size:1rem; }
+.contact button { padding:12px; border:none; border-radius:6px; background:#1b1f3a; color:white; font-size:1.2rem; cursor:pointer; }
+.contact button:hover { background:#3b4b87; } button:hover { background-color: #005fcc; transition: 1s;text-shadow: darkmagenta;font-family: 'Times New Roman', Times, serif;} .contact button:hover{font-family: 'Times New Roman', Times, serif; color: yellowgreen; background-color: #005fcc;transition:1s ;}
+
+/* ---------------- Footer ---------------- */
+footer { text-align:center; padding:20px; background:#1b1f3a; color:white; font-size:0.9rem; }
+
+/* ---------------- Dark Mode ---------------- */
+body.dark { background:#121214; color:#e4e6eb; }
+body.dark nav { background:#0f1117; }
+body.dark .hero::before { background:url('https://source.unsplash.com/1600x900/?technology') center/cover no-repeat; opacity:0.2; }
+body.dark .card, body.dark .hobby-card, body.dark .students, body.dark .progress-container, body.dark .contact form { background:#1e1e2a; }
+body.dark .card .title, body.dark .card .subtitle, body.dark .hobby-card p, body.dark .students ul li, body.dark .progress-bar { color:#e4e6eb; }
+body.dark footer { background:#0f1117; color:#e4e6eb; }
+
+/* ---------------- Responsive ---------------- */
+@media(max-width:768px){ .cards, .hobbies{ flex-direction:column; align-items:center; } }
+
+/* ---------------- Modal ---------------- */
+.modal { position:fixed; top:0; left:0; width:100%; height:100%; display:none; justify-content:center; align-items:center; background:rgba(0,0,0,0.8); z-index:1000; }
+.modal img { max-width:90%; max-height:90%; border-radius:10px; cursor:pointer; }
+
+/* ---------------- Counters ---------------- */
+.counters { display:flex; gap:50px; justify-content:center; margin-top:20px; }
+.counter { text-align:center; transition:0.3s; }
+.counter:hover { transform:scale(1.1); color:#0078ff; }
+.counter h3 { font-size:2rem; margin-bottom:5px; }
+.counter p { font-size:1rem; color:#666; }
+
+/* ---------------- Back to Top ---------------- */
+#backToTop { position:fixed; bottom:30px; right:30px; background:#0078ff; color:white; padding:10px 15px; border-radius:50%; font-size:18px; cursor:pointer; display:none; z-index:100; transition:0.3s; }
+#backToTop:hover { background:#005fcc; }
+
+/* ---------------- Typing Cursor ---------------- */
+.typing::after { content:'|'; animation:blink 0.7s infinite; }
+@keyframes blink { 0%,100%{opacity:1;}50%{opacity:0;} }
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav id="navbar">
+  <div class="logo">Premium Page</div>
+  <ul>
+    <li><a href="#home" class="active">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#hobbies">Hobbies</a></li>
+    <li><a href="#students">Students</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="schools">schools</a></li>
+  </ul>
+  <div class="theme-toggle">
+    <input type="checkbox" id="darkSwitch" onclick="toggleDarkMode()">
+    <label for="darkSwitch">🌙</label>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section id="home" class="hero">
+  <h1>Welcome to My Page</h1>
+  <h2 class="typing" id="typing"></h2>
+  <img src="IMG_E3083-url.JPG" alt="My photo" class="hero photo">
+</section>
+
+<!-- About -->
+<section id="about" class="about">
+  <h2>About Me</h2>
+  <p>I am passionate about technology, photography, and learning. This site now includes **typing animations, multi-layer parallax, gallery hover zooms, and staggered fades**!</p>
+  <div class="counters">
+    <div class="counter"><h3 id="studentCount">0</h3><p>Students</p></div>
+    <div class="counter"><h3 id="hobbyCount">0</h3><p>Hobbies</p></div>
+    <div class="counter"><h3 id="galleryCount">0</h3><p>Gallery Items</p></div>
+  </div>
+  <div class="progress-container">
+    <h3>Skill Levels</h3>
+    <div class="progress"><div class="progress-bar" data-width="90%">HTML</div></div>
+    <div class="progress"><div class="progress-bar" data-width="75%">CSS</div></div>
+    <div class="progress"><div class="progress-bar" data-width="60%">JavaScript</div></div>
+  </div>
+</section>
+
+<!-- Gallery -->
+<section id="gallery" class="cards">
+  <div class="card"><img src="https://source.unsplash.com/featured/?nature" alt=""><div class="content"><div class="title">Nature Splash</div></div></div>
+  <div class="card"><img src="https://source.unsplash.com/featured/?city" alt=""><div class="content"><div class="title">City Lights</div></div></div>
+  <div class="card"><img src="https://source.unsplash.com/featured/?technology" alt=""><div class="content"><div class="title">Tech Design</div></div></div>
+</section>
+
+<!-- Hobbies -->
+<section id="hobbies">
+  <h2>My Hobbies</h2>
+  <div class="filter-btns">
+    <button class="active" data-filter="all">All</button>
+    <button data-filter="Photography">Photography</button>
+    <button data-filter="Coding">Coding</button>
+    <button data-filter="Traveling">Traveling</button>
+    <button data-filter="Reading">Reading</button>
+  </div>
+  <div class="hobbies">
+    <div class="hobby-card" data-category="Photography"><img src="https://source.unsplash.com/200x150/?photography" alt=""><p>Photography</p></div>
+    <div class="hobby-card" data-category="Coding"><img src="https://source.unsplash.com/200x150/?coding" alt=""><p>Coding</p></div>
+    <div class="hobby-card" data-category="Traveling"><img src="https://source.unsplash.com/200x150/?travel" alt=""><p>Traveling</p></div>
+    <div class="hobby-card" data-category="Reading"><img src="https://source.unsplash.com/200x150/?reading" alt=""><p>Reading</p></div>
+  </div>
+</section>
+
+<!-- Students -->
+<section id="students" class="students">
+  <h2>My Class Students</h2>
+  <ul>
+    <li>Edward</li>
+    <li>Samuel</li>
+    <li>Nicolas</li>
+    <li>Felix</li>
+    <li>Rose</li>
+    <li>Petra</li>
+    <li>Mbarga</li>
+  </ul>
+</section>
+
+<!-- Contact -->
+<section id="contact" class="contact">
+  <h2>Contact Me</h2>
+  <form id="contactForm">
+    <input type="text" id="name" placeholder="Your Name" required>
+    <input type="email" id="email" placeholder="Email Address" required>
+    <textarea id="message" rows="5" placeholder="Your Message" required></textarea>
+    <button type="submit">Send Message</button>
+  </form>
+  <p id="formStatus"></p>
+</section>
+
+<!-- Footer -->
+<footer>&copy; 2025 Premium Landing Page. All Rights Reserved.</footer>
+
+<!-- Modal -->
+<div class="modal" id="modal"><img src="" alt="modal image"></div>
+
+<!-- Back to Top -->
+<div id="backToTop">&#8679;</div>
+
+<script>
+// ---------------- Navbar Scroll ----------------
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll',()=>{ navbar.classList.toggle('scrolled', window.scrollY>50); });
+
+// ---------------- Dark Mode ----------------
+function toggleDarkMode(){ const body=document.body; const isDark=body.classList.toggle('dark'); localStorage.setItem('theme', isDark?'dark':'light'); }
+window.addEventListener('DOMContentLoaded',()=>{ if(localStorage.getItem('theme')==='dark'){ document.body.classList.add('dark'); document.getElementById('darkSwitch').checked=true; } });
+
+// ---------------- Contact ----------------
+document.getElementById('contactForm').addEventListener('submit',function(e){ e.preventDefault();
+const name=document.getElementById('name').value,email=document.getElementById('email').value,message=document.getElementById('message').value;
+const status=document.getElementById('formStatus'); if(name && email && message){ status.style.color='green'; status.textContent='Message sent successfully!'; this.reset(); } else{ status.style.color='red'; status.textContent='Please fill all fields.'; } });
+
+// ---------------- Scroll Animations ----------------
+const sections = document.querySelectorAll('section');
+const observer = new IntersectionObserver(entries=>{ entries.forEach(entry=>{ if(entry.isIntersecting){ entry.target.classList.add('visible'); } }); },{ threshold:0.1 });
+sections.forEach(sec=>observer.observe(sec));
+
+// ---------------- Card / Hobby staggered fade ----------------
+const cards = document.querySelectorAll('.card, .hobby-card');
+cards.forEach((c,i)=>{ observer.observe(c); c.style.transitionDelay = `${i*0.15}s`; });
+
+// ---------------- Student fade-in ----------------
+const studentItems = document.querySelectorAll('.students ul li');
+studentItems.forEach((li,i)=>{ observer.observe(li); li.style.transitionDelay = `${i*0.15}s`; li.classList.add('visible'); });
+
+// ---------------- Gallery & Hobbies ----------------
+const modal=document.getElementById('modal'); const modalImg=modal.querySelector('img');
+document.querySelectorAll('.card img, .hobby-card img').forEach(img=>{ img.addEventListener('click',()=>{ modal.style.display='flex'; modalImg.src=img.src; }); });
+modal.addEventListener('click',()=>{ modal.style.display='none'; });
+
+const filterBtns = document.querySelectorAll('.filter-btns button');
+const hobbies = document.querySelectorAll('.hobby-card');
+filterBtns.forEach(btn=>{ btn.addEventListener('click', ()=>{
+  filterBtns.forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+  const filter = btn.dataset.filter;
+  hobbies.forEach(h=>{ h.style.display = (filter==='all'||h.dataset.category===filter)?'block':'none'; });
+}); });
+
+// ---------------- Counters ----------------
+function animateCounter(id,end){ const el=document.getElementById(id); let count=0; const step=Math.ceil(end/100); const interval=setInterval(()=>{ count+=step; if(count>=end){ count=end; clearInterval(interval); } el.textContent=count; },20); }
+window.addEventListener('DOMContentLoaded',()=>{ animateCounter('studentCount',6); animateCounter('hobbyCount',4); animateCounter('galleryCount',3); });
+
+// ---------------- Progress Bars ----------------
+const progressBars = document.querySelectorAll('.progress-bar');
+const progressObserver = new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){ entry.target.style.width = entry.target.dataset.width; }
+  });
+},{ threshold:0.5 });
+progressBars.forEach(bar=>progressObserver.observe(bar));
+
+// ---------------- Back to Top ----------------
+const backToTop = document.getElementById('backToTop');
+window.addEventListener('scroll', ()=>{ backToTop.style.display = window.scrollY > 300 ? 'block' : 'none'; });
+backToTop.addEventListener('click', ()=>{ window.scrollTo({top:0, behavior:'smooth'}); });
+
+// ---------------- Typing Animation ----------------
+const phrases = ["Tech Enthusiast", "Photographer", "Web Developer", "Lifelong Learner"];
+let i=0,j=0,current='',isDeleting=false;
+const typingEl = document.getElementById('typing');
+function type 

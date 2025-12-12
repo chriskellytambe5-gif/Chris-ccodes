@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+  <style>
+    button{
+      background-color: darkviolet;
+      color: white;
+      box-sizing: border-box;
+      border-radius: 7px;
+
+    }
+  </style>
+  <meta charset="utf-8">
+  <title>Social App — Login</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body><style>
+  div{
+    background-color: rgba(128, 128, 128, 0.822);
+    margin-right: 500px;
+    margin-right: 50px;
+    margin-inline-start: 20px;
+
+  }
+</style>
+  <div class="container">
+    <div class="card">
+      <div class="header">
+        <div class="brand"><h1>Social App</h1></div>
+        <div class="nav">
+          <button onclick="show('login')">Login</button>
+          <button onclick="show('register')">Register</button>
+        </div>
+      </div>
+
+      <div id="login" class="form">
+        <h2>Sign in</h2>
+        <div class="form-row">
+          <input id="loginEmail" class="input" placeholder="Email" />
+        </div>
+        <div class="form-row">
+          <input id="loginPassword" type="password" class="input" placeholder="Password" />
+        </div>
+        <div class="form-row">
+          <button class="btn" onclick="login()">Login</button>
+        </div>
+      </div>
+
+      <div id="register" class="form" style="display:none">
+        <h2>Create account</h2>
+        <div class="form-row">
+          <input id="regName" class="input" placeholder="Full name" />
+        </div>
+        <div class="form-row">
+          <input id="regEmail" class="input" placeholder="Email" />
+        </div>
+        <div class="form-row">
+          <input id="regPassword" type="password" class="input" placeholder="Password" />
+        </div>
+        <div class="form-row">
+          <input id="regAvatar" type="file" />
+        </div>
+        <div class="form-row">
+          <button class="btn" onclick="register()">Register</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+<script src="/app.js"></script>
+</body>
+</html
