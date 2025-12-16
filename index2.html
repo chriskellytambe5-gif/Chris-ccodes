@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>contollerUser</title>
+</head>
+<body>
+    <style>
+        #btn {
+            background-color: rgb(21, 255, 0);
+            color: white;
+        }
+        #btn:hover {
+            background-color:blue;
+            cursor: pointer;
+            color: chartreuse;
+            transition: 1s;
+
+        }
+        input, .username, .password, .cpassword {
+            width: 300px;
+            height: 30px;
+            border: none;
+            border-bottom: 2px solid rgb(10, 6, 247);
+            margin-bottom: 10px;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            font-size: large;
+            width: 100%;
+        }
+        input:focus, .username:focus, .password:focus, .cpassword:focus {
+            outline: none;
+            border-bottom: 2px solid blue;
+        }
+        button {
+            width: 100px;
+            height: 35px;
+            background-color: green;
+            color: white;
+            font-weight: bolder;
+            border: none;
+            border-radius: 10px;
+            margin: 20px;
+            width: 100%;
+        }
+        @media (max-width:600px) {
+            input, .username, .password, .cpassword {
+                width: 100%;
+                padding: 15px;
+            }
+            button {
+                width: 100%;
+                font-size: 14px;
+            }
+            
+        }
+        button:hover {
+            background-color: darkgreen;
+            cursor: pointer;
+            color: rgb(10, 33, 241);
+            transition: 1s;
+
+
+        }
+        form {
+            background-color: rgba(54, 49, 49, 0.096);
+            max-width: 400px;
+            width: 90%;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+    </style>
+  
+    <h2>  Get Started</h2>
+    <button id="btn">subcribe</button><br><br>
+      <form action="succes.html" onsubmit="return validateForm()">
+        <label for="username"> Enter Your Username</label><br>
+        <input type="text" id="username" class="username"placeholder="Enter Your Name"><br>
+        <label for="password" class="password">Enter Your password</label><br>
+        <input type="password" id="password" class="password" placeholder="Enter Your password"><br>
+        <label for="confirm password"></label> Confirm Your password<br>
+        <input type="password" id="cpassword" class="cpassword" placeholder="Confirm Your password"><br><b><br>
+
+
+        <button>send</button>
+    </form>
+    <script>
+        function validateForm(){
+            let username = getelementById("username").value;
+            let password = getelementById("password").value;
+            let cpassword = getelementById("cpassword"). value;
+
+            if(username === "") {
+                 alert("please user name cannot be empty")
+                return false; // prevent form submission
+            }
+        }
+
+        if(password === "") {
+              alert (" you must add a password")
+        return false;
+    
+        }
+      
+        if (cpassword !==password) {
+            alert("confirm password do not match the password")
+            return false;
+        }
+
+    </script>
+
+    <script>
+        // accessing the button through the ID
+        let mybtn = document.getElementById ("btn") ;
+        //adding an event to the button
+        mybtn.addEventListener("click", function() { 
+            return true; // go to succes.html
+          
+
+              //DOM CSS
+            mybtn.style.backgroundColor= "red";
+            mybtn.style.color="white";
+            mybtn.style.width="150px";
+            mybtn.style.height="40px";
+            mybtn.style.borderRadius="20px";
+            mybtn.style.fontWeight="bolder";
+            mybtn.style.fontSize="20px";
+            mybtn.style.border="none";
+            mybtn.style.cursor="pointer";
+            mybtn.style.boxShadow="0 0 10px gray";
+            mybtn.style.transition="all 0.5s ease-in-out";
+            mybtn.style.transform="scale(1.1)";
+            mybtn.style.hover="transform: scale(1.1)";
+            
+        }
+          
+        );
+    </script>
+</body>
+</html>
